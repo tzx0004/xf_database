@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+
+name: AI_Engine_Development
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the 2022.1 branch
+  push:
+    branches: [ next ]
+  pull_request:
+    branches: [ next ]
+      
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    # Set up Python 3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+
+    # Install sphinx and dependencies
+    - name: install sphinx and dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install rst2pdf==0.98  rinohtype==0.5.3 recommonmark==0.7.1 sphinx_markdown_tables==0.0.15 sphinx==4.0.2 docutils==0.16 bs4
+    # Build
+    - name: Build documentation
+      run: |
+        cd docs; make html
+    # Fixup
+    - name: Fixup
+      run: |
+        mkdir deploy
+        cp -r docs deploy/
+        
+    #- name: execute py script
+   # run the run.py to get the latest data
+    #  run: |
+   #           python handle_html.py
+              
+    - name: execute py script
+   # run the run.py to get the latest data
+      run: |
+              pwd
+              cd deploy/docs/src
+              python ftmap.py
+              cp index.ftmap ../build/html
+              cd ../../../
+              cp handle_html.py deploy/docs/build/html
+              cp docs/source/upload_2_ft.py deploy/docs/build/html
+              python deploy/docs/build/html/handle_html.py
+              pwd
+              cd deploy/docs/build/html
+              zip -r docs.zip . 
+              echo "Hello World!!"
+              python upload_2_ft.py
+              
+        
