@@ -6,9 +6,9 @@ name: AI_Engine_Development
 on:
   # Triggers the workflow on push or pull request events but only for the 2022.1 branch
   push:
-    branches: [ next ]
+    branches: [ main ]
   pull_request:
-    branches: [ next ]
+    branches: [ main ]
       
 jobs:
   build_and_deploy:
